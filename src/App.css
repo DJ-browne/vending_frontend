@@ -1,0 +1,30 @@
+.App {
+    background-color: #121212;
+    min-height: 100vh;
+    max-height: 100vh;
+    min-width: 100vw;
+    max-width: 100vw;
+}
+
+.vending_parent_container {
+    color: white;
+    margin-top: 10px;
+}
+
+.vending_parent_container h2 {
+    text-align: center;
+}
+
+.vending_machine_container {
+    margin-bottom: 20px;
+    padding: 50px;
+    background: #1D1D1D;
+    border-radius: 4px;
+    min-height: 200px;
+}
+
+.vending_machine_container_bottom {
+    padding: 30px;
+    background: #1D1D1D;
+    border-radius: 4px;
+}
