@@ -8,7 +8,32 @@ function App() {
 
 
   const [userSelected, setUserSelected] = React.useState<Record<string, any> | null>(null);
+  const [depositedFunds, setDepositedFunds] = React.useState<number>(0);
 
+  const depositFundsForUser = () => {
+    if (userSelected) {
+      const userSelectedCopy = userSelected;
+      if (userSelected.balance < 1000) {
+        alert("Not enough funds to deposit")
+        return;
+      }
+      userSelectedCopy.balance = userSelectedCopy.balance - 1000;
+
+      setUserSelected(userSelectedCopy)
+      setDepositedFunds(depositedFunds + 1000);
+
+    }
+  }
+  const withdrawFundsForUser = () => {
+    if (userSelected) {
+      const userSelectedCopy = userSelected;
+
+      userSelectedCopy.balance = userSelectedCopy.balance + depositedFunds;
+
+      setUserSelected(userSelectedCopy)
+      setDepositedFunds(0);
+    }
+  }
 
   return (
     <div className="App">
@@ -28,7 +53,7 @@ function App() {
               textDecoration: 'none',
             }}
           >Vending Machine</Typography>
-          <VendingMachineComponent />
+          <VendingMachineComponent depositFundsForUser={depositFundsForUser} depositedFunds={depositedFunds} withdrawFundsForUser={withdrawFundsForUser} />
         </Container>
 
       </section>

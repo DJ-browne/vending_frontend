@@ -67,7 +67,7 @@ function ResponsiveAppBar(props: props) {
     return (
         <AppBar sx={{
             backgroundColor: '#373737'
-        }} position="static">
+        }} position='sticky'>
             <Container maxWidth="lg">
 
                 <Toolbar disableGutters>

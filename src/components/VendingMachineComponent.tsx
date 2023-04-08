@@ -1,9 +1,16 @@
-import { Box, CircularProgress, Grid, Paper, Stack, Typography, styled } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography, styled } from "@mui/material";
 
 import VendingMachineItemComponent from "../components/VendingMachineItemComponent"
 import React, { useEffect } from "react";
 
-function VendingMachineComponent() {
+
+interface props {
+    depositFundsForUser: () => void
+    depositedFunds: Number
+    withdrawFundsForUser: () => void
+}
+
+function VendingMachineComponent(props: props) {
 
     interface Product {
         id: number;
@@ -31,6 +38,7 @@ function VendingMachineComponent() {
     }, []);
     const [vendingMachineItems, setVendingMachineItems] = React.useState<Product[]>([]);
     const [isRetrievingVendingMachineItems, setIsRetrievingItems] = React.useState<boolean>(true);
+
     const [cartList, setCartList] = React.useState<Record<string, any>[]>([]);
 
     const handleCartUpdate = (newItem: Record<string, any>) => {
@@ -58,7 +66,7 @@ function VendingMachineComponent() {
         //Decrease number of items in machine
         const indexOfExistingItemInMachine = vendingMachineItems.findIndex((e) => e.id === newItem.id);
         const existinVendingItems = [...vendingMachineItems];
-        
+
         existinVendingItems[indexOfExistingItemInMachine].quantity = (parseInt(existinVendingItems[indexOfExistingItemInMachine].quantity) - 1).toString()
 
         setVendingMachineItems(existinVendingItems)
@@ -79,17 +87,21 @@ function VendingMachineComponent() {
                 </Box>
             </div>
             <div className="vending_machine_container_bottom">
-                <Typography
-                    variant="h5"
-                    noWrap
-                    sx={{
-                        fontFamily: 'monospace',
-                        fontSize: 20,
-                        fontWeight: 700,
-                        textDecoration: 'none'
-                    }}
-                >Your items</Typography>
-                <hr style={{ marginBottom: '20px' }} />
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        sx={{
+                            fontFamily: 'monospace',
+                            fontSize: 20,
+                            fontWeight: 700,
+                            textDecoration: 'none'
+                        }}
+                    >Your items</Typography>
+
+                </div>
+
+                <hr style={{ marginBottom: '20px', borderColor: 'rgba(255,255,255,0.4)' }} />
                 {cartList.length === 0 ? <Typography
                     variant="caption"
                     noWrap
@@ -111,9 +123,52 @@ function VendingMachineComponent() {
 
                                 <span>₩{e.totalPrice.toLocaleString()}</span>
                             </div>
+
                         </div>
                     )
                 })}
+                {cartList.length !== 0 && <Typography
+                    variant="caption"
+                    noWrap
+                    sx={{
+                        fontFamily: 'monospace',
+                        fontSize: 16,
+                        fontWeight: 800,
+                        color: '#FFDE2F',
+                        textDecoration: 'none'
+                    }}
+                >Cart total:  ₩{cartList.reduce((n, { totalPrice }) => n + parseInt(totalPrice), 0)}</Typography>}
+
+                <hr style={{ marginBottom: '20px', borderColor: 'rgba(255,255,255,0.4)' }} />
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                fontFamily: 'monospace',
+                                fontSize: 20,
+                                fontWeight: 700,
+                                textDecoration: 'none'
+                            }}
+                        >Deposited funds</Typography>
+                        <Typography
+                            variant="caption"
+                            noWrap
+                            sx={{
+                                fontFamily: 'monospace',
+                                fontSize: 16,
+                                fontWeight: 700,
+                                textDecoration: 'none'
+                            }}
+                        >₩{props.depositedFunds.toString()}</Typography>
+                    </div>
+                    <div>
+                        {props.depositedFunds !== 0 && <Button className="custom_button" sx={{ backgroundColor: '#06A77D', color: 'black', border: 'none' }} onClick={props.withdrawFundsForUser} variant="contained">Withdraw</Button>}
+                        <Button className="custom_button" onClick={props.depositFundsForUser} variant="contained" sx={{ marginLeft: '20px', border: 'none', backgroundColor: '#06A77D', color: 'black' }}>Deposit ₩1,000</Button>
+                    </div>
+                </div>
+
             </div>
         </div>
     )
