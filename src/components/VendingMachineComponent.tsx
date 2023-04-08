@@ -6,8 +6,10 @@ import React, { useEffect } from "react";
 
 interface props {
     depositFundsForUser: () => void
-    depositedFunds: Number
+    depositedFunds: number
     withdrawFundsForUser: () => void
+    updateUserInDatabase: (purchaseAmount: number) => void
+    handlePayment: (cartTotal: number) => void
 }
 
 function VendingMachineComponent(props: props) {
@@ -40,6 +42,9 @@ function VendingMachineComponent(props: props) {
     const [isRetrievingVendingMachineItems, setIsRetrievingItems] = React.useState<boolean>(true);
 
     const [cartList, setCartList] = React.useState<Record<string, any>[]>([]);
+
+
+
 
     const handleCartUpdate = (newItem: Record<string, any>) => {
         const currentCartList = cartList;
@@ -98,7 +103,15 @@ function VendingMachineComponent(props: props) {
                             textDecoration: 'none'
                         }}
                     >Your items</Typography>
+                    {cartList.length !== 0 && <Button className={`custom_button ${(props.depositedFunds < cartList.reduce((n, { totalPrice }) => n + parseInt(totalPrice), 0)) ? 'disabled' : ''}`} sx={{ backgroundColor: '#06A77D', color: 'black', border: 'none' }} onClick={() => {
+                        //CLient side updating
+                        props.handlePayment(cartList.reduce((n, { totalPrice }) => n + parseInt(totalPrice), 0));
+                        setCartList([]);
 
+                        //Server side updating
+                        props.updateUserInDatabase(cartList.reduce((n, { totalPrice }) => n + parseInt(totalPrice), 0));
+
+                    }} variant="contained">Pay</Button>}
                 </div>
 
                 <hr style={{ marginBottom: '20px', borderColor: 'rgba(255,255,255,0.4)' }} />
@@ -170,7 +183,7 @@ function VendingMachineComponent(props: props) {
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }
 

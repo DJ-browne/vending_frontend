@@ -10,6 +10,34 @@ function App() {
   const [userSelected, setUserSelected] = React.useState<Record<string, any> | null>(null);
   const [depositedFunds, setDepositedFunds] = React.useState<number>(0);
 
+  const handlePayment = (cartTotal: number) => {
+    const updatedDepositAmount = depositedFunds - cartTotal;
+    setDepositedFunds(updatedDepositAmount)
+  }
+
+  const updateUserInDatabase = async (purchaseAmount: number) => {
+
+    if (userSelected) {
+
+      const userSelectedId = userSelected.id;
+
+      await fetch(`http://localhost:5000/users/${userSelectedId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          purchasePrice: purchaseAmount,
+        }),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+
+    }
+  }
+
+  const updateItemsInDatabase = () => {
+
+  }
+
   const depositFundsForUser = () => {
     if (userSelected) {
       const userSelectedCopy = userSelected;
@@ -53,7 +81,7 @@ function App() {
               textDecoration: 'none',
             }}
           >Vending Machine</Typography>
-          <VendingMachineComponent depositFundsForUser={depositFundsForUser} depositedFunds={depositedFunds} withdrawFundsForUser={withdrawFundsForUser} />
+          <VendingMachineComponent updateUserInDatabase={updateUserInDatabase} depositFundsForUser={depositFundsForUser} depositedFunds={depositedFunds} withdrawFundsForUser={withdrawFundsForUser} handlePayment={handlePayment} />
         </Container>
 
       </section>
